@@ -1,11 +1,72 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
+import {WebView} from 'react-native-webview'
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
+
 export default function HomeScreen() {
+
+  const html = `
+    <html>
+    <head>
+    <script src="https://secure.nmi.com/token/Collect.js" data-tokenization-key="5mN8N7-jhr55W-N22pxX-uAW2s9"></script>
+    </head>
+    <body>
+        <h1>CollectJS Payment Form</h1>
+        <form action="/your-page.php" method="post">
+            <table>
+                <tr>
+                    <td>First Name</td>
+                    <td><input size="30" type="text" name="fname" value="Test" /></td>
+                </tr>
+                <tr>
+                    <td>Last Name</td>
+                    <td><input size="30" type="text" name="lname" value="User" /></td>
+                </tr>
+                <tr>
+                    <td>Address</td>
+                    <td><input size="30" type="text" name="address" value="123 Main Street"></td>
+                </tr>
+                <tr>
+                    <td>City</td>
+                    <td><input size="30" type="text" name="city" value="Beverly Hills"></td>
+                </tr>
+                <tr>
+                    <td>State</td>
+                    <td><input size="30" type="text" name="state" value="CA"></td>
+                </tr>
+                <tr>
+                    <td>Zip</td>
+                    <td><input size="30" type="text" name="zip" value="90210"></td>
+                </tr>
+                <tr>
+                    <td>Country</td>
+                    <td><input size="30" type="text" name="country" value="US"></td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td><input size="30" type="text" name="phone" value="5555555555"></td>
+                </tr>
+            </table>
+            <br>
+            <button id="payButton" type="button">Submit Payments</button>
+            </form>
+        </body>
+        <script>
+        window.addEventListener('load', function() {
+            if (typeof window.CollectJS !== 'undefined') {
+                window.alert("CollectJS is available");
+            } else {
+                window.alert("CollectJS is NOT available");
+            }
+        });
+    </script>
+    </html>
+    `
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -16,36 +77,21 @@ export default function HomeScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <ThemedText type="title">Collect.js Test App</ThemedText>
         <HelloWave />
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+      <View>
+          <WebView
+              style={{ height: 1000 }}
+              originWhitelist={['*']}
+              source={{ html: html }}
+              onMessage={() => {}}
+              injectedJavaScript={``}
+              javaScriptEnabled={true}
+              onLoadEnd={() => {
+              }}
+          />
+      </View>
     </ParallaxScrollView>
   );
 }
